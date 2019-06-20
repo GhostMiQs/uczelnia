@@ -1,0 +1,72 @@
+#!/bin/bash
+function dotxt(){
+find -name '*' -exec file {} \; | grep -o -P '^.+: \w+ image' > Desktop/katalog.txt
+}
+function katal(){
+mkdir Desktop/fotki
+mkdir Desktop/Posortowane_zdjecia
+find -iregex '.*\.\(jpeg\|jpg\|gif\|fig\|png\|tiff\|bmp\|img\)$' -exec cp {} Desktop/fotki  \;
+mkdir Desktop/fotki/Male
+mkdir Desktop/fotki/Srednie
+mkdir Desktop/fotki/Duze
+find Desktop/fotki -type f -size -10k -exec cp {} Desktop/fotki/Male \;
+find Desktop/fotki -type f -size -2M -exec cp {} Desktop/fotki/Srednie \;
+find Desktop/fotki -type f -size +2M -exec cp {} Desktop/fotki/Duze \;
+clear
+chmod 777 Desktop/fotki
+chmod 777 Desktop/fotki/Male
+chmod 777 Desktop/fotki/Srednie
+chmod 777 Desktop/fotki/Duze
+mv Desktop/fotki/Male ~/Desktop/Posortowane_zdjecia
+mv Desktop/fotki/Duze ~/Desktop/Posortowane_zdjecia
+mv Desktop/fotki/Srednie ~/Desktop/Posortowane_zdjecia
+echo "Konczenie...." 
+sleep 3
+echo "Proces zakonczony"
+}
+function wysz() {
+        echo "1. Wyszukaj pliki po rozszerzeniach"
+	echo "2. Wyszukaj plik po nazwie"
+        echo "3. Skataloguj obrazy"
+        read p
+	case "$p" in
+        1) echo "Wprowadz rozszerzenie"
+        read g
+        find -iname "*.$g"
+        ;;
+        2) echo "Wprowadz nazwe"
+        read r
+        find -iname "$r.*"
+        ;;
+        3) echo "Katalogowanie"
+	katal 
+	rm -r Desktop/fotki ;;
+        *) echo "blad" 
+	 break ;;
+        esac
+}
+tput clear
+tput cup 5 17
+tput rev
+echo 'Wybierz opcje:'
+tput sgr0
+
+tput cup 7 15
+echo '1.Wyswietl pliki'
+tput cup 8 15
+echo '2.Wyszukaj i skataloguj obrazy'
+tput cup 9 15
+echo '3.Wyjscie'
+tput bold
+tput cup 11 15
+read d "Dokonaj wyboru miedzy 1 a 3"
+tput clear
+case "$d" in
+1) echo "Najgorsza czesc programu" 
+	dotxt ;;
+2) echo "Wybierz kolejna opcje"
+	wysz ;;
+3) echo "Wylaczanie....";
+sleep 3 ;;
+*) echo "Nic nie wybrales" ;; 
+esac
